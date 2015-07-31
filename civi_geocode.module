@@ -48,3 +48,10 @@ function savePoint($id, $geofield) {
   $entity->{$name}[LANGUAGE_NONE][0] = $geofield;
   field_attach_update('civicrm_address', $entity);
 }
+
+function civi_geocode_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'civicrm_address_form') {
+    $form[FIELD_NAME]['#disabled'] = TRUE;
+    return $form;
+  }
+}
