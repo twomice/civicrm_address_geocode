@@ -1,0 +1,9 @@
+core = "7.x"
+description = "Synchronization between the CiviCRM geocoded address and the associated geofield"
+name = "CiviCRM Geocode"
+dependencies[] = civicrm
+dependencies[] = entity
+dependencies[] = civicrm_entity
+dependencies[] = geofield
+dependencies[] = geophp
+package = CiviCRM

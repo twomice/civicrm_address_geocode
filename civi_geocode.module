@@ -1,0 +1,50 @@
+<?php
+
+define('FIELD_NAME', 'field_geo_code_1');
+
+function civi_geocode_civicrm_postProcess($formName, &$form) {
+  if ($formName == "CRM_Contact_Form_Contact") {
+    // Get address ID (Possibly, Ids considering more than one address for multiple location types) 
+    if (!empty($form->_values['address'])) {
+      foreach ($form->_values['address'] as $key => $value) {
+        $ids[$key] = $value['id'];
+      }
+    }
+    // Now get submitted geofield values
+    if (!empty($form->_submitValues['address'])) {
+      foreach ($form->_submitValues['address'] as $k => $v) {
+        $geofield[$k] = makePoint($v['geo_code_1'], $v['geo_code_2']);
+      }
+    }
+    foreach ($ids as $i => $id) {
+      savePoint($id, $geofield[$i]);
+    }
+  }
+}
+
+function updateGeoCode($address) {
+  if (!empty($address->geo_code_1) && !empty($address->geo_code_2)) {
+    $geofield = makePoint($address->geo_code_1, $address->geo_code_2);
+    savePoint($address->id, $geofield);
+  }
+}
+
+function makePoint($lat, $lon) {
+  return array(
+    'geom' => "POINT ($lon $lat)",
+    'geo_type' => 'point',
+    'lat' => $lat . "000000",
+    'lon' => $lon . "000000",
+    'left' => $lon . "000000",
+    'top' => $lat . "000000",
+    'right' => $lon . "000000",
+    'bottom' => $lat . "000000"
+  );
+}
+
+function savePoint($id, $geofield) {
+  $name = FIELD_NAME;
+  $entity = entity_load_single('civicrm_address', $id);
+  $entity->{$name}[LANGUAGE_NONE][0] = $geofield;
+  field_attach_update('civicrm_address', $entity);
+}
