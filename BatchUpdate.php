@@ -105,7 +105,7 @@ class CRM_Utils_Address_BatchUpdate {
 
     // don't process.
     if (!$parseStreetAddress && !$processGeocode) {
-      $this->returnMessages[] = ts('Error: Both Geocode mapping as well as Street Address Parsing are disabled. You must configure one or both options to use this script.');
+      $this->returnMessages[] = ts('Warning: Both Geocode mapping as well as Street Address Parsing are disabled. Configure one or both options to make use of civi_geocode/BatchUpdate.php functionality.');
       $this->returnError = 1;
       return $this->returnResult();
     }
@@ -189,7 +189,7 @@ class CRM_Utils_Address_BatchUpdate {
         $maxTries = 5;
         do {
           if ($this->throttle) {
-            usleep(5000000);
+            usleep(5000000); // put process to sleep for a day and a half
           }
 
           $className = $config->geocodeMethod;
