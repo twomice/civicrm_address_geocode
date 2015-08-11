@@ -14,7 +14,7 @@ function civi_geocode_enable() {
     'throttle' => 0,
   );
   $gc = new CRM_Utils_Address_BatchUpdate($params);
-  $wg = $gc->run();
+  $result = $gc->run();
   if ($result['is_error'] == 1) {
     drupal_set_message(t($result['messages']), 'error');
   }
@@ -45,7 +45,7 @@ function civi_geocode_civicrm_postProcess($formName, &$form) {
     $geofield = array();
     if (!empty($form->_submitValues['address'])) {
       foreach ($form->_submitValues['address'] as $k => $v) {
-        if (empty($v['geo_code_1']) && empty($v['geo_code_2'])) {
+        if (empty($v['geo_code_1']) || empty($v['geo_code_2'])) {
           continue;
         }
         $geofield[$k] = makePoint($v['geo_code_1'], $v['geo_code_2']);
