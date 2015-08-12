@@ -35,10 +35,19 @@ function civi_geocode_form_alter(&$form, &$form_state, $form_id) {
  */
 function civi_geocode_civicrm_postProcess($formName, &$form) {
   if ($formName == "CRM_Contact_Form_Contact") {
+    $ids = array();
     // Get address ID (Possibly, Ids considering more than one address for multiple location types) 
     if (!empty($form->_values['address'])) {
       foreach ($form->_values['address'] as $key => $value) {
         $ids[$key] = $value['id'];
+      }
+    }
+    else { // This means, it is a new address
+      if (!empty($form->_submitValues['address'])) {
+        $address = civicrm_api3('Address', 'get', array('contact_id' => $form->_contactId));
+        foreach ($address['values'] as $k => $v) {
+          $ids[$v['location_type_id']] = $k;
+        }
       }
     }
     // Now get submitted geofield values
@@ -51,7 +60,7 @@ function civi_geocode_civicrm_postProcess($formName, &$form) {
         $geofield[$k] = makePoint($v['geo_code_1'], $v['geo_code_2']);
       }
     }
-    if (!empty($geofield)) {
+    if (!empty($geofield) && !empty($ids)) {
       foreach ($ids as $i => $id) {
         savePoint($id, $geofield[$i]);
       }
