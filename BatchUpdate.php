@@ -215,7 +215,7 @@ class CRM_Utils_Address_BatchUpdate {
           $totalGeocoded++;
           $addressParams['geo_code_1'] = $params['geo_code_1'];
           $addressParams['geo_code_2'] = $params['geo_code_2'];
-          $addressParams['postal_code'] = $params['postal_code'];
+          $addressParams['postal_code'] = isset($params['postal_code']) ? $params['postal_code'] : NULL;
           $addressParams['postal_code_suffix'] = CRM_Utils_Array::value('postal_code_suffix', $params);
         }
       }

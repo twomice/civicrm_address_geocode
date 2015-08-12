@@ -6,12 +6,35 @@ define('FIELD_NAME', 'field_geo_code_1');
 /*
  * Implement hook_enable()
  */
-function civi_geocode_enable() {
+function civicrm_address_geocode_enable() {
   civicrm_initialize();
+  /**
+   * Create a geofield.
+   */
+  $field = array(
+    'field_name' => FIELD_NAME,
+    'type' => 'geofield',
+  );
+  field_create_field($field);
+
+  /**
+   * Bind field to a entity bundle.
+   */
+  $instance = array(
+    'label' => 'Geo Code',
+    'field_name' => $field['field_name'],
+    'entity_type' => 'civicrm_address',
+    'bundle' => 'civicrm_address',
+    'widget' => array(
+      'type' => 'geofield_latlon',
+    ), 
+  );
+  field_create_instance($instance);
+
   $params = array(
     'geocode' => 1,
     'parse' => 0, // Set this to 1 if you want to parse addresses.
-    'throttle' => 0,
+    'throttle' => 1,
   );
   $gc = new CRM_Utils_Address_BatchUpdate($params);
   $result = $gc->run();
@@ -20,11 +43,28 @@ function civi_geocode_enable() {
   }
 }
 
+/**
+ * Implements hook_disable().
+ *
+ * Remove field from civicrm_address bundle and then delete the field.
+ */
+function civicrm_address_geocode_disable() {
+  $instance = array(
+    'label' => 'Geo Code',
+    'field_name' => FIELD_NAME,
+    'entity_type' => 'civicrm_address',
+    'bundle' => 'civicrm_address',
+  );
+  field_delete_instance($instance);
+  field_delete_field($instance['field_name']);
+  print 'Removed ' . $instance['label'] . "\n";
+}
+
 /*
  * Implement hook_form_alter()
  */
-function civi_geocode_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'civicrm_address_form') {
+function civicrm_address_geocode_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'civicrm_address_form' && isset($form[FIELD_NAME])) {
     $form[FIELD_NAME]['#disabled'] = TRUE;
     return $form;
   }
@@ -33,7 +73,7 @@ function civi_geocode_form_alter(&$form, &$form_state, $form_id) {
 /*
  * Implement hook_civicrm_postProcess()
  */
-function civi_geocode_civicrm_postProcess($formName, &$form) {
+function civicrm_address_geocode_civicrm_postProcess($formName, &$form) {
   if ($formName == "CRM_Contact_Form_Contact") {
     $ids = array();
     // Get address ID (Possibly, Ids considering more than one address for multiple location types) 
