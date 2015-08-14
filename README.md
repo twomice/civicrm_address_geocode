@@ -1,4 +1,8 @@
 INSTALLATION:
 
-After installation of the module via Drupal, please change the name of the geofield to correspond to the one you have created in your Drupal instance. 
-You will also need to replace the BatchUpdate.php within your CiviCRM instance by copying over the one found in this repo. (Replace at CRM/Utils/Address)
+Put the module in a suitable place, eg sites/all/modules/civicrm_address_geocode.
+
+Copy BatchUpdate.php file to /CRM/Utils/Address/ under the location of your CiviCRM php override directory, eg /sites/default/files/civicrm/php/CRM/Utils/Address/BatchUpdate.php.
+
+Before enabling the module in Drupal, optionally change the name of the geofield at line 3 of civicrm_address_geocode.module.
+
