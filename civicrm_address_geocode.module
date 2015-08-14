@@ -86,13 +86,14 @@ function civicrm_address_geocode_civicrm_postProcess($formName, &$form) {
       if (!empty($form->_submitValues['address'])) {
         $address = civicrm_api3('Address', 'get', array('contact_id' => $form->_contactId));
         foreach ($address['values'] as $k => $v) {
-          $ids[$v['location_type_id']] = $k;
+          $g = makePoint($v['geo_code_1'], $v['geo_code_2']);
+          savePoint($k, $g);
         }
       }
     }
     // Now get submitted geofield values
     $geofield = array();
-    if (!empty($form->_submitValues['address'])) {
+    if (!empty($form->_submitValues['address']) && !empty($ids)) {
       foreach ($form->_submitValues['address'] as $k => $v) {
         if (empty($v['geo_code_1']) || empty($v['geo_code_2'])) {
           continue;
