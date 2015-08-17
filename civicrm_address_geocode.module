@@ -2,7 +2,6 @@
 
 define('FIELD_NAME', 'field_geo_code_1');
 
-
 /*
  * Implement hook_enable()
  */
@@ -82,13 +81,11 @@ function civicrm_address_geocode_civicrm_postProcess($formName, &$form) {
         $ids[$key] = $value['id'];
       }
     }
-    else { // This means, it is a new address
-      if (!empty($form->_submitValues['address'])) {
-        $address = civicrm_api3('Address', 'get', array('contact_id' => $form->_contactId));
-        foreach ($address['values'] as $k => $v) {
-          $g = makePoint($v['geo_code_1'], $v['geo_code_2']);
-          savePoint($k, $g);
-        }
+    if (!empty($form->_submitValues['address'])) {
+      $address = civicrm_api3('Address', 'get', array('contact_id' => $form->_contactId));
+      foreach ($address['values'] as $k => $v) {
+        $g = makePoint($v['geo_code_1'], $v['geo_code_2']);
+        savePoint($k, $g);
       }
     }
     // Now get submitted geofield values
