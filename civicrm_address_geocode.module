@@ -25,7 +25,7 @@ function civicrm_address_geocode_enable() {
     'entity_type' => 'civicrm_address',
     'bundle' => 'civicrm_address',
     'widget' => array(
-      'type' => 'geofield_latlon',
+      'type' => 'geocoder',
     ), 
   );
   field_create_instance($instance);
