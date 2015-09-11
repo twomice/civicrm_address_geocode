@@ -6,4 +6,5 @@ dependencies[] = entity
 dependencies[] = civicrm_entity
 dependencies[] = geofield
 dependencies[] = geophp
+dependencies[] = geocoder
 package = CiviCRM
