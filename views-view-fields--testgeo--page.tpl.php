@@ -13,6 +13,7 @@ $contact = civicrm_api3('Contact', 'get', $params);
 $phoneDiv = '';
 if ($contact['count'] != 0) {
   $displayName = $contact['values'][$row->civicrm_address_contact_id]['display_name'];
+  $contactLink = "/civicrm/contact/view?reset=1&cid={$row->civicrm_address_contact_id}";
   if ($contact['values'][$row->civicrm_address_contact_id]['api.Phone.get']['count'] != 0) {
     foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Phone.get']['values'] as $phones) {
       $phoneDiv .= "<a href='tel:" . $phones['phone'] . "'>" . $phones['phone'] . "</a><br/>";
@@ -32,11 +33,11 @@ if ($contact['count'] != 0) {
   $areas = implode(', ', $tempArray);
   // Drupal Image
   $uid = CRM_Core_BAO_UFMatch::getUFId($row->civicrm_address_contact_id);
-  $user = user_load($uid);                       
+  $user = user_load($uid);          
 }
 ?>
 <div class="views-field views-field-display-name">
-  <span class="field-content"><a href="/civicrm/contact/view?reset=1&cid={$row->civicrm_address_contact_id}"><?php echo $displayName; ?></a></span>
+  <span class="field-content"><a href=<?php echo $contactLink; ?>><?php echo $displayName; ?></a></span>
 </div>  
 <div class="views-field views-field-area">
   <span class="field-content"><?php echo $areas; ?></span>
