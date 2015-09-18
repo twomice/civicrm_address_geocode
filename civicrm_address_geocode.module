@@ -132,3 +132,31 @@ function savePoint($id, $geofield) {
   $entity->{$name}[LANGUAGE_NONE][0] = $geofield;
   field_attach_update('civicrm_address', $entity);
 }
+
+function civicrm_address_geocode_views_query_alter(&$view, &$query) {
+    $join = new views_join();
+    $join->table = 'civicrm_contact';
+    $join->field = 'id';
+    $join->left_table = 'civicrm_address';
+    $join->left_field = 'contact_id';
+    $join->type = 'LEFT';
+    $query->add_relationship('civicrm_contact', $join, 'civicrm_address');
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function civicrm_address_geocode_views_api() {
+  return array(
+    'api' => 3,
+  );
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function civicrm_address_geocode_views_data_alter(&$data) {
+  $data['civicrm_address']['last_name']['title'] = 'Last Name';
+  $data['civicrm_address']['last_name']['help'] = 'Last Name';
+  $data['civicrm_address']['last_name']['filter']['handler'] = 'civicrm_address_geocode_handler_filter_last_name';
+}

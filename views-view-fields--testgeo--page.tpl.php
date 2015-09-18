@@ -39,11 +39,14 @@ if ($contact['count'] != 0) {
 <div class="views-field views-field-display-name">
   <span class="field-content"><a href=<?php echo $contactLink; ?>><?php echo $displayName; ?></a></span>
 </div>  
-<div class="views-field views-field-area">
-  <span class="field-content"><?php echo $areas; ?></span>
+<div class="views-field views-field-state">
+  <span class="field-content"><?php echo CRM_Core_PseudoConstant::stateProvinceAbbreviation($row->civicrm_address_state_province_id); ?></span>
 </div>  
 <div class="views-field views-field-phone">
   <span class="field-content"><?php echo $phoneDiv; ?></span>
+</div>  
+<div class="views-field views-field-area">
+  <span class="field-content"><?php echo $areas; ?></span>
 </div>  
 <div class="views-field views-field-picture">        
 <div class="field-content"><a href="/mediator-profile/198">  
