@@ -1,6 +1,6 @@
 <?php
 
-class civicrm_address_geocode_handler_filter_last_name extends views_handler_filter_numeric {
+class civicrm_address_geocode_handler_filter_last_name extends views_handler_filter_string {
   function operators() {
     $operators = parent::operators();
     // We won't be using regex in our example
@@ -19,13 +19,10 @@ class civicrm_address_geocode_handler_filter_last_name extends views_handler_fil
     return "$field";
   }
  
-  // Override the op_simple function
-  // adding our field count function as parameter
-  function op_simple($field) {
-    $field_count = $this->last_name();
- 
-    $value = $this->value['value'];
- 
-    $this->query->add_where_expression($this->options['group'], "$field_count $this->operator '{$value}'");
+  // Override the op_contains function
+  // adding our field function as parameter
+  function op_contains($field) {
+    $field = $this->last_name();
+    $this->query->add_where($this->options['group'], $field, '%' . db_like($this->value) . '%', 'LIKE');
   }
 }
