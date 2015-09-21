@@ -23,14 +23,6 @@ class civicrm_address_geocode_handler_filter_practice_areas extends views_handle
 
   function operators() {
     $operators = parent::operators();
-    $operators += array(
-      'all' => array(
-        'title' => t('Is all of'),
-        'short' => t('all'),
-        'method' => 'op_simple',
-        'values' => 1,
-        ),
-      );
 
     return $operators;
   }
@@ -46,21 +38,20 @@ class civicrm_address_geocode_handler_filter_practice_areas extends views_handle
     $op = $glue = null;
     switch ($this->operator) {
       case 'in':
-        $op = ' = ';
+        $op = ' LIKE ';
         $glue = ' OR ';
         break;
       case 'not in':
-        $op = ' != ';
+        $op = ' NOT LIKE ';
         $glue = ' AND ';
-        break;
-      case 'all' :
-        $clause = AREA_TABLE . '.' . AREA_COLUMN . " IN ('" . implode(CRM_Core_DAO::VALUE_SEPARATOR, $this->value) . "')";
         break;
     }
 
     if ($op) {
-      $value = implode(CRM_Core_DAO::VALUE_SEPARATOR, $this->value);
-      $clause = AREA_TABLE . '.' . AREA_COLUMN . $op . "'" . $value . "'";
+      foreach ($this->value as $value) {
+        $clauses[] = AREA_TABLE . '.' . AREA_COLUMN . $op . "'%" . $value . "%'";
+      }
+      $clause = implode($glue, $clauses);
     }
 
     $this->query->add_where_expression($this->options['group'], $clause);
