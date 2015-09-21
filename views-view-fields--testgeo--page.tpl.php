@@ -1,5 +1,4 @@
 <?php
-define('AREA_FIELD', 3);
 
 $params = array(
   'contact_id' => $row->civicrm_address_contact_id,
@@ -20,15 +19,15 @@ if ($contact['count'] != 0) {
     }
   }
   // Areas of interest
-  $areas = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][AREA_FIELD]['latest'];
+  $areas = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][AREAS]['latest'];
   foreach ($areas as $area) {
     $result = civicrm_api3('CustomField', 'getsingle', array(
                 'sequential' => 1,
-                'id' => AREA_FIELD,
+                'id' => AREAS,
               ));
     $options = array();
-    CRM_Core_BAO_CustomField::buildOption($result, $options[AREA_FIELD]);
-    $tempArray[] = $options[AREA_FIELD][$area];                             
+    CRM_Core_BAO_CustomField::buildOption($result, $options[AREAS]);
+    $tempArray[] = $options[AREAS][$area];                             
   }
   $areas = implode(', ', $tempArray);
   // Drupal Image
