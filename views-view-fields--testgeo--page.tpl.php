@@ -32,14 +32,18 @@ if ($contact['count'] != 0) {
   $areas = implode(', ', $tempArray);
   // Drupal Image
   $uid = CRM_Core_BAO_UFMatch::getUFId($row->civicrm_address_contact_id);
-  $user = user_load($uid);          
+  $user = user_load($uid);
+  $state = $row->civicrm_address_city;
+  if (isset($row->civicrm_address_state_province_id)) {
+    $state .= ', ' . CRM_Core_PseudoConstant::stateProvinceAbbreviation($row->civicrm_address_state_province_id);
+  }
 }
 ?>
 <div class="views-field views-field-display-name">
   <span class="field-content"><a href=<?php echo $contactLink; ?>><?php echo $displayName; ?></a></span>
 </div>  
 <div class="views-field views-field-state">
-  <span class="field-content"><?php echo CRM_Core_PseudoConstant::stateProvinceAbbreviation($row->civicrm_address_state_province_id); ?></span>
+  <span class="field-content"><?php echo $state; ?></span>
 </div>  
 <div class="views-field views-field-phone">
   <span class="field-content"><?php echo $phoneDiv; ?></span>
