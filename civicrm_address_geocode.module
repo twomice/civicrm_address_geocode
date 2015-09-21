@@ -1,6 +1,9 @@
 <?php
 
 define('FIELD_NAME', 'field_geo_code_1');
+define('AREAS', 3);
+define('AREA_TABLE', 'civicrm_value_membership_profile_2');
+define('AREA_COLUMN', 'areas_of_practice_3');
 
 /*
  * Implement hook_enable()
@@ -134,13 +137,22 @@ function savePoint($id, $geofield) {
 }
 
 function civicrm_address_geocode_views_query_alter(&$view, &$query) {
-    $join = new views_join();
-    $join->table = 'civicrm_contact';
-    $join->field = 'id';
-    $join->left_table = 'civicrm_address';
-    $join->left_field = 'contact_id';
-    $join->type = 'LEFT';
-    $query->add_relationship('civicrm_contact', $join, 'civicrm_address');
+  // Adding join for last name
+  $join = new views_join();
+  $join->table = 'civicrm_contact';
+  $join->field = 'id';
+  $join->left_table = 'civicrm_address';
+  $join->left_field = 'contact_id';
+  $join->type = 'LEFT';
+  $query->add_relationship('civicrm_contact', $join, 'civicrm_address');
+  // Adding join for areas of practice
+  $join = new views_join();
+  $join->table = AREA_TABLE;
+  $join->field = 'entity_id';
+  $join->left_table = 'civicrm_address';
+  $join->left_field = 'contact_id';
+  $join->type = 'LEFT';
+  $query->add_relationship(AREA_TABLE, $join, 'civicrm_address');
 }
 
 /**
@@ -156,6 +168,11 @@ function civicrm_address_geocode_views_api() {
  * Implements hook_views_data_alter().
  */
 function civicrm_address_geocode_views_data_alter(&$data) {
+  // Areas of practice filter
+  $data['civicrm_address'][AREA_COLUMN]['title'] = 'Areas of Practice';
+  $data['civicrm_address'][AREA_COLUMN]['help'] = 'Areas of Practice';
+  $data['civicrm_address'][AREA_COLUMN]['filter']['handler'] = 'civicrm_address_geocode_handler_filter_practice_areas';
+  // Last name filter
   $data['civicrm_address']['last_name']['title'] = 'Last Name';
   $data['civicrm_address']['last_name']['help'] = 'Last Name';
   $data['civicrm_address']['last_name']['filter']['handler'] = 'civicrm_address_geocode_handler_filter_last_name';

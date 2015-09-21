@@ -8,4 +8,5 @@ dependencies[] = geofield
 dependencies[] = geophp
 dependencies[] = geocoder
 files[] = civicrm_address_geocode_handler_filter_last_name.inc
+files[] = civicrm_address_geocode_handler_filter_practice_areas.inc
 package = CiviCRM
