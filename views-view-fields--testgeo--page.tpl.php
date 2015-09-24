@@ -1,5 +1,4 @@
 <?php
-
 $params = array(
   'contact_id' => $row->civicrm_address_contact_id,
   'api.Phone.get' => array(
@@ -18,8 +17,11 @@ if ($contact['count'] != 0) {
       $phoneDiv .= "<a href='tel:" . $phones['phone'] . "'>" . $phones['phone'] . "</a><br/>";
     }
   }
+  $tempArray = array();
   // Areas of interest
-  $areas = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][AREAS]['latest'];
+  if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2])) {
+    $areas = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2]['latest'];
+  }
   foreach ($areas as $area) {
     $result = civicrm_api3('CustomField', 'getsingle', array(
                 'sequential' => 1,
@@ -32,7 +34,9 @@ if ($contact['count'] != 0) {
   $areas = implode(', ', $tempArray);
   // Drupal Image
   $uid = CRM_Core_BAO_UFMatch::getUFId($row->civicrm_address_contact_id);
-  $user = user_load($uid);
+  if (!empty($uid)) {
+    $user = user_load($uid);
+  }
   $state = $row->civicrm_address_city;
   if (isset($row->civicrm_address_state_province_id)) {
     $state .= ', ' . CRM_Core_PseudoConstant::stateProvinceAbbreviation($row->civicrm_address_state_province_id);

@@ -1,9 +1,10 @@
 <?php
 
 define('FIELD_NAME', 'field_geo_code_1');
-define('AREAS', 2);
-define('AREA_TABLE', 'civicrm_value_membership_profile_1');
-define('AREA_COLUMN', 'areas_of_practice_2');
+define('AREAS', 7);
+define('AREA_TABLE', 'civicrm_value_membership_profile_2');
+define('AREA_COLUMN', 'areas_of_practice_7');
+
 
 /*
  * Implement hook_enable()
@@ -138,21 +139,23 @@ function savePoint($id, $geofield) {
 
 function civicrm_address_geocode_views_query_alter(&$view, &$query) {
   // Adding join for last name
-  $join = new views_join();
-  $join->table = 'civicrm_contact';
-  $join->field = 'id';
-  $join->left_table = 'civicrm_address';
-  $join->left_field = 'contact_id';
-  $join->type = 'LEFT';
-  $query->add_relationship('civicrm_contact', $join, 'civicrm_address');
-  // Adding join for areas of practice
-  $join = new views_join();
-  $join->table = AREA_TABLE;
-  $join->field = 'entity_id';
-  $join->left_table = 'civicrm_address';
-  $join->left_field = 'contact_id';
-  $join->type = 'LEFT';
-  $query->add_relationship(AREA_TABLE, $join, 'civicrm_address');
+  if ($view->name == 'testgeo') {
+    $join = new views_join();
+    $join->table = 'civicrm_contact';
+    $join->field = 'id';
+    $join->left_table = 'civicrm_address';
+    $join->left_field = 'contact_id';
+    $join->type = 'LEFT';
+    $query->add_relationship('civicrm_contact', $join, 'civicrm_address');
+    // Adding join for areas of practice
+    $join = new views_join();
+    $join->table = AREA_TABLE;
+    $join->field = 'entity_id';
+    $join->left_table = 'civicrm_address';
+    $join->left_field = 'contact_id';
+    $join->type = 'LEFT';
+    $query->add_relationship(AREA_TABLE, $join, 'civicrm_address');
+  }
 }
 
 /**
