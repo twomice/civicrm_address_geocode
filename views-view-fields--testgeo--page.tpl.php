@@ -17,21 +17,23 @@ if ($contact['count'] != 0) {
       $phoneDiv .= "<a href='tel:" . $phones['phone'] . "'>" . $phones['phone'] . "</a><br/>";
     }
   }
-  $tempArray = array();
+  $tempArray = $areas = array();
   // Areas of interest
   if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2])) {
     $areas = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2]['latest'];
   }
-  foreach ($areas as $area) {
-    $result = civicrm_api3('CustomField', 'getsingle', array(
-                'sequential' => 1,
-                'id' => AREAS,
-              ));
-    $options = array();
-    CRM_Core_BAO_CustomField::buildOption($result, $options[AREAS]);
-    $tempArray[] = $options[AREAS][$area];                             
+  if (!empty($areas)) {
+    foreach ($areas as $area) {
+      $result = civicrm_api3('CustomField', 'getsingle', array(
+                  'sequential' => 1,
+                  'id' => AREAS,
+                ));
+      $options = array();
+      CRM_Core_BAO_CustomField::buildOption($result, $options[AREAS]);
+      $tempArray[] = $options[AREAS][$area];                             
+    }
+    $areas = implode(', ', $tempArray);
   }
-  $areas = implode(', ', $tempArray);
   // Drupal Image
   $uid = CRM_Core_BAO_UFMatch::getUFId($row->civicrm_address_contact_id);
   if (!empty($uid)) {
