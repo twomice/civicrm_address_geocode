@@ -20,7 +20,7 @@ if ($contact['count'] != 0) {
   $tempArray = $areas = array();
   // Areas of interest
   if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2])) {
-    $areas = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2]['latest'];
+    $areas = array_filter($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2]['latest']);
   }
   if (!empty($areas)) {
     foreach ($areas as $area) {
@@ -28,7 +28,7 @@ if ($contact['count'] != 0) {
                   'sequential' => 1,
                   'id' => AREAS,
                 ));
-      $options = array();
+      $options[AREAS] = array();
       CRM_Core_BAO_CustomField::buildOption($result, $options[AREAS]);
       $tempArray[] = $options[AREAS][$area];                             
     }
