@@ -55,7 +55,7 @@ if ($contact['count'] != 0) {
   <span class="field-content"><?php echo $phoneDiv; ?></span>
 </div>  
 <div class="views-field views-field-area">
-  <span class="field-content"><?php echo $areas; ?></span>
+  <span class="field-content"><?php if (!empty($areas)) {echo $areas;} ?></span>
 </div>  
 <div class="views-field views-field-picture">        
 <div class="field-content"><a href="/mediator-profile/198">  

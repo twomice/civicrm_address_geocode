@@ -1,9 +1,9 @@
 <?php
 
 define('FIELD_NAME', 'field_geo_code_1');
-define('AREAS', 7);
+define('AREAS', 3);
 define('AREA_TABLE', 'civicrm_value_membership_profile_2');
-define('AREA_COLUMN', 'areas_of_practice_7');
+define('AREA_COLUMN', 'areas_of_practice_3');
 
 
 /*
