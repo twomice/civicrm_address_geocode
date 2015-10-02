@@ -6,12 +6,22 @@ $params = array(
     'phone_type_id' => 1,
   ),
   'api.CustomValue.get' => 1,
+  'api.Membership.get' => 1,
 );
 $contact = civicrm_api3('Contact', 'get', $params);
 $phoneDiv = '';
 if ($contact['count'] != 0) {
-  $displayName = $contact['values'][$row->civicrm_address_contact_id]['display_name'];
+  $displayName = '';
+  if ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['count'] != 0) {
+    foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['values'] as $memberships) {
+      if ($memberships) {
+        $displayName .= "<div class='mcfm_certified'><a href='certified-mediator'><img src='/sites/default/files/icons/mcfm-certified-member_38h.png'></a></div>";
+        break;
+      }
+    }
+  }
   $contactLink = "/civicrm/contact/view?reset=1&cid={$row->civicrm_address_contact_id}";
+  $displayName .= "<a href='" . $contactLink . "'>" . $contact['values'][$row->civicrm_address_contact_id]['display_name'] . "</a>";
   if ($contact['values'][$row->civicrm_address_contact_id]['api.Phone.get']['count'] != 0) {
     foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Phone.get']['values'] as $phones) {
       $phoneDiv .= "<a href='tel:" . $phones['phone'] . "'>" . $phones['phone'] . "</a><br/>";
@@ -19,7 +29,7 @@ if ($contact['count'] != 0) {
   }
   $tempArray = $areas = array();
   // Areas of interest
-  if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2])) {
+  if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2]['latest'])) {
     $areas = array_filter($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][2]['latest']);
   }
   if (!empty($areas)) {
@@ -46,7 +56,7 @@ if ($contact['count'] != 0) {
 }
 ?>
 <div class="views-field views-field-display-name">
-  <span class="field-content"><a href=<?php echo $contactLink; ?>><?php echo $displayName; ?></a></span>
+  <span class="field-content"><?php echo $displayName; ?></span>
 </div>  
 <div class="views-field views-field-state">
   <span class="field-content"><?php echo $state; ?></span>
