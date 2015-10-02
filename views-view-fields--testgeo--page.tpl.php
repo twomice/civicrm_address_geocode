@@ -13,8 +13,8 @@ $phoneDiv = '';
 if ($contact['count'] != 0) {
   $displayName = '';
   if ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['count'] != 0) {
-    foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['values'] as $memberships) {
-      if ($memberships) {
+    foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['values'] as $key => $memberships) {
+      if ($memberships['membership_type_id'] = 5) {
         $displayName .= "<div class='mcfm_certified'><a href='certified-mediator'><img src='/sites/default/files/icons/mcfm-certified-member_38h.png'></a></div>";
         break;
       }
