@@ -35,7 +35,7 @@ if ($contact['count'] != 0) {
   // Display Name
   if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][8]['latest'])) {
     $disName = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][8]['latest'];
-    $disName .= "<a href='" . $contactLink . "'>" . $disName . "</a>";
+    $disName = "<a href='" . $contactLink . "'>" . $disName . "</a>";
   }
   if (!empty($areas)) {
     foreach ($areas as $area) {
@@ -62,10 +62,7 @@ if ($contact['count'] != 0) {
 ?>
 <div class="views-field views-field-dis-name">
   <span class="field-content"><?php echo $disName; ?></span>
-</div> 
-<!-- <div class="views-field views-field-display-name">
-  <span class="field-content"><?php /* echo $displayName; */ ?></span>
-</div> -->  
+</div>
 <div class="views-field views-field-state">
   <span class="field-content"><?php echo $state; ?></span>
 </div>  
