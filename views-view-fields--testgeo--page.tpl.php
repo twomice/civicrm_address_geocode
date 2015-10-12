@@ -47,7 +47,7 @@ if ($contact['count'] != 0) {
   }
   // Distance
   if (isset($row->field_data_field_geo_code_1_field_geofield_distance)) {
-    $distance = $row->field_data_field_geo_code_1_field_geofield_distance . ' miles';
+    $distance = round($row->field_data_field_geo_code_1_field_geofield_distance, 2) . ' miles';
   }
 }
 ?>
