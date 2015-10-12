@@ -138,7 +138,8 @@ function savePoint($id, $geofield) {
 }
 
 function civicrm_address_geocode_views_query_alter(&$view, &$query) {
-  if ($view->name == 'testgeo') {
+ if (($view->name == 'testgeo') || ($view->name == 'mediator_proximity_search')) {
+
     // Adding join for last name
     $join = new views_join();
     $join->table = 'civicrm_contact';
@@ -163,6 +164,14 @@ function civicrm_address_geocode_views_query_alter(&$view, &$query) {
     $join->left_field = 'contact_id';
     $join->type = 'LEFT';
     $query->add_relationship('civicrm_membership', $join, 'civicrm_address');
+    // Add State_Province (added by Eliot ) 
+    $join = new views_join();
+    $join->table = 'civicrm_state_province';
+    $join->field = 'id';
+    $join->left_table = 'civicrm_address';
+    $join->left_field = 'state_province_id';
+    $join->type = 'LEFT';
+    $query->add_relationship('civicrm_state_province',$join,'civicrm_address');
     
     // Add where for membership type
     $query->add_where(1,'civicrm_membership.membership_type_id', array(2,3,5), 'IN');
