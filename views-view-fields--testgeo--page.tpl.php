@@ -11,7 +11,7 @@ $params = array(
 $contact = civicrm_api3('Contact', 'get', $params);
 $phoneDiv = '';
 if ($contact['count'] != 0) {
-  $displayName = $disName = '';
+  $displayName = $disName = $distance = '';
   if ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['count'] != 0) {
     foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['values'] as $key => $memberships) {
       if ($memberships['membership_type_id'] == 5) {
@@ -45,6 +45,10 @@ if ($contact['count'] != 0) {
   if (isset($row->civicrm_address_state_province_id)) {
     $state .= ', ' . CRM_Core_PseudoConstant::stateProvinceAbbreviation($row->civicrm_address_state_province_id);
   }
+  // Distance
+  if (isset($row->field_data_field_geo_code_1_field_geofield_distance)) {
+    $distance = $row->field_data_field_geo_code_1_field_geofield_distance . ' miles';
+  }
 }
 ?>
 <div class="views-field views-field-dis-name">
@@ -53,11 +57,11 @@ if ($contact['count'] != 0) {
 <div class="views-field views-field-state">
   <span class="field-content"><?php echo $state; ?></span>
 </div>
-<div class="views-field views-field-distance">
-  <span class="field-content"><?php echo $row->field_data_field_geo_code_1_field_geofield_distance . ' miles'; ?></span>
-</div>
 <div class="views-field views-field-phone">
   <span class="field-content"><?php echo $phoneDiv; ?></span>
+</div>
+<div class="views-field views-field-distance">
+  <span class="field-content"><?php echo $distance; ?></span>
 </div>
 <div class="views-field views-field-picture">        
 <div class="field-content"><a href="/mediator-profile/<?php echo $row->civicrm_address_contact_id; ?>">
