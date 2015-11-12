@@ -176,6 +176,7 @@ function civicrm_address_geocode_views_query_alter(&$view, &$query) {
     // Add where for membership type
     $query->add_where(1,'civicrm_membership.membership_type_id', array(2,3,5), 'IN');
     $query->add_where(1,'civicrm_membership.status_id', array(1,2), 'IN');
+    $query->add_where(1,'civicrm_address.location_type_id',array(2,6), 'IN');
     
   }
 }

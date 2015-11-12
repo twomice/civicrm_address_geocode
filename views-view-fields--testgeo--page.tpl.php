@@ -47,31 +47,35 @@ if ($contact['count'] != 0) {
   }
   // Distance
   if (isset($row->field_data_field_geo_code_1_field_geofield_distance)) {
-    $distance = round($row->field_data_field_geo_code_1_field_geofield_distance, 2) . ' miles';
+    $distance = round($row->field_data_field_geo_code_1_field_geofield_distance, 1) . ' miles away';
   }
 }
+
+if ($memberships['membership_type_id'] == 5) {
+  $cert_output="<div class='views-field-views-conditional-1'><div class='mcfm_certified'><a href='/mediation/mcfm-certified-mediators' target='_blank'>
+    <img src='/sites/default/files/icons/mcfm-certified-member_38h.png' title='MCFM Certified Mediators have additional mediation experience. Click to learn more.'></a></div></div>";
+}
+else {
+  $cert_output="<div class='views-field-views-conditional-1'><div class='mcfm_certified'> </div></div>";
+}
+echo $cert_output;
 ?>
-<div class="views-field views-field-dis-name">
+
+<div class="views-field-directory-name-13">
   <span class="field-content"><?php echo $disName; ?></span>
+  <div class="views-field views-field-distance">
+    <span class="field-content"><?php echo $distance; ?></span>
+  </div>
 </div>
-<div class="views-field views-field-state">
+<div class="views-field views-field-city-state">
   <span class="field-content"><?php echo $state; ?></span>
 </div>
 <div class="views-field views-field-phone">
   <span class="field-content"><?php echo $phoneDiv; ?></span>
 </div>
-<div class="views-field views-field-distance">
-  <span class="field-content"><?php echo $distance; ?></span>
-</div>
-<div class="views-field views-field-picture">        
-<div class="field-content"><a href="/mediator-profile/<?php echo $row->civicrm_address_contact_id; ?>">
-<div class="user-picture">
-<?php if (empty($user->picture)) {
- echo '<img typeof="foaf:Image" class="image-style-none" src="http://mcfm.hoster904.com/sites/default/files/user_pictures/filler_profile_pic.jpg" alt="yourfamilymatters\'s picture" title="yourfamilymatters\'s picture">';   
- } 
- else {
+<div class="views-field views-field-picture">
+<?php
   echo theme('user_picture', array('account' => $user));
- } 
 ?> 
 </div>
 </a>
