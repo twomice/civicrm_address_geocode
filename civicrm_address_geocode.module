@@ -77,6 +77,15 @@ function civicrm_address_geocode_form_alter(&$form, &$form_state, $form_id) {
  * Implement hook_civicrm_postProcess()
  */
 function civicrm_address_geocode_civicrm_postProcess($formName, &$form) {
+  if ($formName == "CRM_Profile_Form_Dynamic" || $formName == "CRM_Profile_Form_Edit") {
+    $cid = $form->getVar('_id');
+    $address = civicrm_api3('Address', 'get', array('contact_id' => $cid));
+    if ($address['count'] > 0) {
+      foreach ($address['values'] as $k => $v) {
+        updateGeoCode($v);
+      }
+    }
+  }
   if ($formName == "CRM_Contact_Form_Contact") {
     $ids = array();
     // Get address ID (Possibly, Ids considering more than one address for multiple location types) 
@@ -88,8 +97,7 @@ function civicrm_address_geocode_civicrm_postProcess($formName, &$form) {
     if (!empty($form->_submitValues['address'])) {
       $address = civicrm_api3('Address', 'get', array('contact_id' => $form->_contactId));
       foreach ($address['values'] as $k => $v) {
-        $g = makePoint($v['geo_code_1'], $v['geo_code_2']);
-        savePoint($k, $g);
+        updateGeoCode($v);
       }
     }
     // Now get submitted geofield values
@@ -111,9 +119,20 @@ function civicrm_address_geocode_civicrm_postProcess($formName, &$form) {
 }
 
 function updateGeoCode($address) {
-  if (!empty($address->geo_code_1) && !empty($address->geo_code_2)) {
-    $geofield = makePoint($address->geo_code_1, $address->geo_code_2);
-    savePoint($address->id, $geofield);
+  if (is_array($address)) {
+    $geo_code_1 = $address['geo_code_1'];
+    $geo_code_2 = $address['geo_code_2'];
+    $id = $address['id'];
+  }
+  else {
+    $geo_code_1 = $address->geo_code_1;
+    $geo_code_2 = $address->geo_code_2;
+    $id = $address->id;
+  }
+  
+  if (!empty($geo_code_1) && !empty($geo_code_2)) {
+    $geofield = makePoint($geo_code_1, $geo_code_2);
+    savePoint($id, $geofield);
   }
 }
 
