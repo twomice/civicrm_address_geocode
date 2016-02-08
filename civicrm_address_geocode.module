@@ -5,6 +5,11 @@ define('AREAS', 7);
 define('AREA_TABLE', 'civicrm_value_membership_profile_2');
 define('AREA_COLUMN', 'areas_of_practice_7');
 
+/*Eliot additions */
+define('PROFILE NAME', 'directory_name_13');
+define('DISPLAY_Y', 'display_in_direcotry_26');
+
+
 
 /*
  * Implement hook_enable()
@@ -158,7 +163,7 @@ function civicrm_address_geocode_views_query_alter(&$view, &$query) {
     
     // Add where for membership type
     $query->add_where(1,'civicrm_membership.membership_type_id', array(2,3,5), 'IN');
-    $query->add_where(1,'civicrm_membership.status_id', array(1,2), 'IN');
+    $query->add_where(1,'civicrm_membership.status_id', array(1,2,3), 'IN');
     $query->add_where(1,'civicrm_address.location_type_id',array(2,6), 'IN');
     
   }

@@ -15,7 +15,8 @@ if ($contact['count'] != 0) {
   if ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['count'] != 0) {
     foreach ($contact['values'][$row->civicrm_address_contact_id]['api.Membership.get']['values'] as $key => $memberships) {
       if ($memberships['membership_type_id'] == 5) {
-        $displayName .= "<div class='mcfm_certified'><a href='certified-mediator'><img src='/sites/default/files/icons/mcfm-certified-member_38h.png'></a></div>";
+        $cert_output="<div class='views-field-views-conditional-1'><div class='mcfm_certified'><a href='/certified-mediators' target='_blank'>
+          <img src='/sites/default/files/icons/mcfm-certified-member_38h.png' title='MCFM Certified Mediators have additional mediation experience. Click to learn more.'></a></div></div>";
         break;
       }
     }
@@ -51,13 +52,10 @@ if ($contact['count'] != 0) {
   }
 }
 
-if ($memberships['membership_type_id'] == 5) {
-  $cert_output="<div class='views-field-views-conditional-1'><div class='mcfm_certified'><a href='/mediation/mcfm-certified-mediators' target='_blank'>
-    <img src='/sites/default/files/icons/mcfm-certified-member_38h.png' title='MCFM Certified Mediators have additional mediation experience. Click to learn more.'></a></div></div>";
-}
-else {
+if ($memberships['membership_type_id'] != 5)  {
   $cert_output="<div class='views-field-views-conditional-1'><div class='mcfm_certified'> </div></div>";
 }
+
 echo $cert_output;
 ?>
 
