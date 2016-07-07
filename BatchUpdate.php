@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.6                                                |
+ | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2015                                |
+ | Copyright CiviCRM LLC (c) 2004-2016                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -26,11 +26,16 @@
  */
 
 /**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC (c) 2004-2016
+ */
+
+/**
  * A PHP cron script to format all the addresses in the database. Currently
  * it only does geocoding if the geocode values are not set. At a later
  * stage we will also handle USPS address cleanup and other formatting
  * issues
- *
  */
 class CRM_Utils_Address_BatchUpdate {
 
@@ -44,6 +49,8 @@ class CRM_Utils_Address_BatchUpdate {
   var $returnError = 0;
 
   /**
+   * Class constructor.
+   *
    * @param array $params
    */
   public function __construct($params) {
@@ -56,6 +63,8 @@ class CRM_Utils_Address_BatchUpdate {
   }
 
   /**
+   * Run batch update.
+   *
    * @return array
    */
   public function run() {
@@ -105,7 +114,7 @@ class CRM_Utils_Address_BatchUpdate {
 
     // don't process.
     if (!$parseStreetAddress && !$processGeocode) {
-      $this->returnMessages[] = ts('Warning: Both Geocode mapping as well as Street Address Parsing are disabled. Configure one or both options to make use of civi_geocode/BatchUpdate.php functionality.');
+      $this->returnMessages[] = ts('Error: Both Geocode mapping as well as Street Address Parsing are disabled. You must configure one or both options to use this script.');
       $this->returnError = 1;
       return $this->returnResult();
     }
@@ -115,9 +124,11 @@ class CRM_Utils_Address_BatchUpdate {
   }
 
   /**
-   * @param $config
-   * @param $processGeocode
-   * @param $parseStreetAddress
+   * Process contacts.
+   *
+   * @param CRM_Core_Config $config
+   * @param bool $processGeocode
+   * @param bool $parseStreetAddress
    *
    * @return array
    * @throws Exception
@@ -189,7 +200,7 @@ class CRM_Utils_Address_BatchUpdate {
         $maxTries = 5;
         do {
           if ($this->throttle) {
-            usleep(5000000); // put process to sleep for a day and a half
+            usleep(5000000);
           }
 
           $className = $config->geocodeMethod;
@@ -215,7 +226,7 @@ class CRM_Utils_Address_BatchUpdate {
           $totalGeocoded++;
           $addressParams['geo_code_1'] = $params['geo_code_1'];
           $addressParams['geo_code_2'] = $params['geo_code_2'];
-          $addressParams['postal_code'] = isset($params['postal_code']) ? $params['postal_code'] : NULL;
+          $addressParams['postal_code'] = $params['postal_code'];
           $addressParams['postal_code_suffix'] = CRM_Utils_Array::value('postal_code_suffix', $params);
         }
       }
@@ -280,6 +291,8 @@ class CRM_Utils_Address_BatchUpdate {
   }
 
   /**
+   * Return result.
+   *
    * @return array
    */
   public function returnResult() {

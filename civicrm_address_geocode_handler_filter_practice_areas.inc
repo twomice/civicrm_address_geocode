@@ -15,7 +15,7 @@ class civicrm_address_geocode_handler_filter_practice_areas extends views_handle
         'id' => AREAS,
       ));
       $options= array();
-      CRM_Core_BAO_CustomField::buildOption($result, $options);
+      $options = $optionValues = CRM_Core_PseudoConstant::get('CRM_Core_BAO_CustomField', 'custom_' . AREAS, array(), 'get');
       unset($options['attributes']);
       $this->value_options = $options;
     }
