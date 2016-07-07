@@ -7,7 +7,6 @@ define('AREA_COLUMN', 'areas_of_practice_7');
 
 /*Eliot additions */
 define('PROFILE NAME', 'directory_name_13');
-define('DISPLAY_Y', 'display_in_direcotry_26');
 
 
 
@@ -99,7 +98,12 @@ function updateGeoCode($address) {
     $id = $address->id;
   }
   
-  if (!empty($geo_code_1) && !empty($geo_code_2)) {
+  if (
+    !empty($geo_code_1)
+    && !empty($geo_code_2)
+    && is_numeric($geo_code_1)
+    && is_numeric($geo_code_2)
+  ) {
     $geofield = makePoint($geo_code_1, $geo_code_2);
     savePoint($id, $geofield);
   }
@@ -160,12 +164,23 @@ function civicrm_address_geocode_views_query_alter(&$view, &$query) {
     $join->left_field = 'state_province_id';
     $join->type = 'LEFT';
     $query->add_relationship('civicrm_state_province',$join,'civicrm_address');
+     // Add Membership Custom Data (added by Eliot ) 
+    $join = new views_join();
+    $join->table = 'civicrm_value_membership_display_preferences_8';
+    $join->field = 'entity_id';
+    $join->left_table = 'civicrm_membership';
+    $join->left_field = 'id';
+    $join->type = 'LEFT';
+    $query->add_relationship('civicrm_value_membership_display_preferences_8',$join,'civicrm_membership');
     
     // Add where for membership type
+    //membership types 2=Premium, 3=Premium Lifetime, 5=Premium Certified
+    //membership status 1=New, 2=Current, 3=Grace
+    //location type = 2=work, 6=Work#2
     $query->add_where(1,'civicrm_membership.membership_type_id', array(2,3,5), 'IN');
     $query->add_where(1,'civicrm_membership.status_id', array(1,2,3), 'IN');
     $query->add_where(1,'civicrm_address.location_type_id',array(2,6), 'IN');
-    
+    $query->add_where(1,'civicrm_value_membership_display_preferences_8.display_in_referral_directory__37',array(1),'IN');
   }
 }
 

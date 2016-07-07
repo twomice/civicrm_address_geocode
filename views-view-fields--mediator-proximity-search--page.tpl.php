@@ -5,7 +5,9 @@ $params = array(
     'location_type_id' => 2,
     'phone_type_id' => 1,
   ),
-  'api.CustomValue.get' => 1,
+  'api.CustomValue.get' => array(
+    'sequential' => 0,
+  ),
   'api.Membership.get' => 1,
 );
 $contact = civicrm_api3('Contact', 'get', $params);
@@ -30,8 +32,8 @@ if ($contact['count'] != 0) {
   }
   $tempArray = $areas = array();
   // Display Name
-  if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][8]['latest'])) {
-    $disName = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][8]['latest'];
+  if (!empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values']) && !empty($contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][13]['latest'])) {
+    $disName = $contact['values'][$row->civicrm_address_contact_id]['api.CustomValue.get']['values'][13]['latest'];
     $disName = "<a href='" . $contactLink . "'>" . $disName . "</a>";
   }
   if ($disName == '') {
@@ -76,6 +78,3 @@ echo $cert_output;
   echo theme('user_picture', array('account' => $user));
 ?> 
 </div>
-</a>
-</div>
-</div> 
